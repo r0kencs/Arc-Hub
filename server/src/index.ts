@@ -1,8 +1,7 @@
-import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import express from "express";
 
-import userRoutes from "./routes/user.routes";
 import mapRoutes from "./routes/map.routes";
 
 dotenv.config();
@@ -16,7 +15,6 @@ app.get("/", (_req, res) => {
   res.json({ message: "API is running 🚀" });
 });
 
-app.use("/api/users", userRoutes);
 app.use("/api/maps", mapRoutes);
 
 const PORT = process.env.PORT || 5000;
