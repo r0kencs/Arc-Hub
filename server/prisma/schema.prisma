@@ -30,8 +30,8 @@ model Post {
 }
 
 model Map {
-  id      String     @id
-  name    String
+  id      String    @id
+  name    String    @unique
   places  Place[]
   lineups Lineup[]
 }
@@ -49,23 +49,31 @@ model Place {
 
 model UtilityType {
   id        String    @id
-  name      String
-  lineups Lineup[]
+  name      String    @unique
+  lineups   Lineup[]
+}
+
+model ThrowTechnique {
+  id      String    @id
+  name    String    @unique
+  lineups Lineup[]  @relation("LineupTechniques")
 }
 
 model Lineup {
-  id            Int         @id @default(autoincrement())
+  id            Int               @id @default(autoincrement())
 
-  type          UtilityType @relation(fields: [typeId], references: [id])
-  typeId        String
-
-  map           Map         @relation(fields: [mapId], references: [id])
+  map           Map               @relation(fields: [mapId], references: [id])
   mapId         String
 
-  originPlace   Place       @relation("OriginPlace", fields: [originPlaceId], references: [id])
+  type          UtilityType       @relation(fields: [typeId], references: [id])
+  typeId        String
+
+  techniques    ThrowTechnique[]  @relation("LineupTechniques")
+
+  originPlace   Place             @relation("OriginPlace", fields: [originPlaceId], references: [id])
   originPlaceId Int
 
-  targetPlace   Place       @relation("TargetPlace", fields: [targetPlaceId], references: [id])
+  targetPlace   Place             @relation("TargetPlace", fields: [targetPlaceId], references: [id])
   targetPlaceId Int
 
   x             Float
