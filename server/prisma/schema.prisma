@@ -33,6 +33,7 @@ model Map {
   id      String     @id
   name    String
   places  Place[]
+  lineups Lineup[]
 }
 
 model Place {
@@ -57,6 +58,9 @@ model Lineup {
 
   type          UtilityType @relation(fields: [typeId], references: [id])
   typeId        String
+
+  map           Map         @relation(fields: [mapId], references: [id])
+  mapId         String
 
   originPlace   Place       @relation("OriginPlace", fields: [originPlaceId], references: [id])
   originPlaceId Int
