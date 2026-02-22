@@ -30,18 +30,37 @@ model Post {
 }
 
 model Map {
-  id    String     @id
-  name  String
+  id      String     @id
+  name    String
+  places  Place[]
+}
+
+model Place {
+  id            Int       @id @default(autoincrement())
+  name          String
+  map           Map       @relation(fields: [mapId], references: [id])
+  mapId         String
+  lineupsFrom   Lineup[]  @relation("OriginPlace")
+  lineupsTo     Lineup[]  @relation("TargetPlace")
+
+  @@unique([name, mapId])
 }
 
 model UtilityType {
   id        String    @id
   name      String
-  utilities Utility[]
+  lineups Lineup[]
 }
 
-model Utility {
-  id      Int         @id @default(autoincrement())
-  type    UtilityType @relation(fields: [typeId], references: [id])
-  typeId  String
+model Lineup {
+  id            Int         @id @default(autoincrement())
+
+  type          UtilityType @relation(fields: [typeId], references: [id])
+  typeId        String
+
+  originPlace   Place       @relation("OriginPlace", fields: [originPlaceId], references: [id])
+  originPlaceId Int
+
+  targetPlace   Place       @relation("TargetPlace", fields: [targetPlaceId], references: [id])
+  targetPlaceId Int
 }
