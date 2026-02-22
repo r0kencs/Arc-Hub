@@ -59,6 +59,12 @@ model ThrowTechnique {
   lineups Lineup[]  @relation("LineupTechniques")
 }
 
+enum MouseClick {
+  LEFT
+  MIDDLE
+  RIGHT
+}
+
 model Lineup {
   id            Int               @id @default(autoincrement())
 
@@ -69,6 +75,8 @@ model Lineup {
   typeId        String
 
   techniques    ThrowTechnique[]  @relation("LineupTechniques")
+
+  mouseClick    MouseClick        @default(LEFT)
 
   originPlace   Place             @relation("OriginPlace", fields: [originPlaceId], references: [id])
   originPlaceId Int
