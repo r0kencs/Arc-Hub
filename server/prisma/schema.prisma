@@ -33,3 +33,15 @@ model Map {
   id    String     @id
   name  String
 }
+
+model UtilityType {
+  id        String    @id
+  name      String
+  utilities Utility[]
+}
+
+model Utility {
+  id      Int         @id @default(autoincrement())
+  type    UtilityType @relation(fields: [typeId], references: [id])
+  typeId  String
+}
