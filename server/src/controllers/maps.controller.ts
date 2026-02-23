@@ -33,7 +33,8 @@ export const getMapById = async (req: Request, res: Response) => {
   try {
     const map = await prisma.map.findUnique({
       where: { id },
-    });
+    },
+  );
 
     if (!map) {
       return res.status(404).json({ error: "Map not found" });
@@ -44,3 +45,17 @@ export const getMapById = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const getMapLineups = async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+
+  try {
+    const lineups = await prisma.map.findUnique({
+      where: { id }
+    }).lineups(); 
+    
+    res.status(200).json(lineups)
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" })
+  }
+}
