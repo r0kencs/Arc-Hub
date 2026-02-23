@@ -15,11 +15,11 @@ const translateCoords = (posX: number, posY: number) => {
   return { x, y };
 };
 
-export function Minimap({ playerPos = { x: 0, y: 0 } }) {
+export function Minimap({ playerPos = { x: 1216, y: -115 } }) {
   const { x, y } = translateCoords(playerPos.x, playerPos.y);
 
   return (
-    <div className="flex justify-center items-center bg-gray-900 p-4">
+    <div className="flex justify-center items-center p-4">
       <svg
         viewBox="0 0 1024 1024"
         className="w-[500px] h-[500px] border-2 border-white/10 shadow-xl"
@@ -33,24 +33,6 @@ export function Minimap({ playerPos = { x: 0, y: 0 } }) {
           cy={y}
           r="12"
           className="fill-yellow-400 stroke-black stroke-[3px] transition-all duration-200 ease-out"
-        />
-
-        {/* Optional: Simple crosshair for (0,0) to check alignment */}
-        <line
-          x1={x - 20}
-          y1={y}
-          x2={x + 20}
-          y2={y}
-          stroke="red"
-          strokeWidth="2"
-        />
-        <line
-          x1={x}
-          y1={y - 20}
-          x2={x}
-          y2={y + 20}
-          stroke="red"
-          strokeWidth="2"
         />
       </svg>
     </div>
