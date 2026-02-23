@@ -20,10 +20,7 @@ export function Minimap({ playerPos = { x: 1216, y: -115 } }) {
 
   return (
     <div className="flex justify-center items-center p-4">
-      <svg
-        viewBox="0 0 1024 1024"
-        className="w-[500px] h-[500px] border-2 border-white/10 shadow-xl"
-      >
+      <svg viewBox="0 0 1024 1024" className="w-[500px] h-[500px]">
         {/* Reference the image from the public folder */}
         <image href="/de_mirage.png" width="1024" height="1024" />
 
