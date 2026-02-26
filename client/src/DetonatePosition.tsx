@@ -1,19 +1,16 @@
 import { translateCoords } from "./positionHelper";
 
-export function Position({
-  x,
-  y,
-  label = "1",
-}: {
+interface Props {
   x: number;
   y: number;
   label?: string;
-}) {
+}
+
+export function DetonatePosition({ x, y, label = "9" }: Props) {
   const { x: xT, y: yT } = translateCoords(x, y);
 
   return (
     <g className="cursor-pointer">
-      {/* The Circle */}
       <circle
         cx={xT}
         cy={yT}
@@ -26,9 +23,9 @@ export function Position({
         y={yT}
         fontSize="18"
         fontWeight="bold"
-        textAnchor="middle" // Centers text horizontally
-        dominantBaseline="central" // Centers text vertically
-        className="fill-black pointer-events-none select-none" // Prevents text from blocking clicks
+        textAnchor="middle"
+        dominantBaseline="central"
+        className="fill-black pointer-events-none select-none"
       >
         {label}
       </text>
