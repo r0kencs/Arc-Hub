@@ -13,8 +13,8 @@ export function ThrowPosition({ x, y }: Props) {
       <circle
         cx={xT}
         cy={yT}
-        r="16"
-        className="fill-amber-600 stroke-amber-600/50 stroke-[8px]"
+        r="12"
+        className="fill-amber-400/50 stroke-amber-400 stroke-[2px]"
       />
     </g>
   );

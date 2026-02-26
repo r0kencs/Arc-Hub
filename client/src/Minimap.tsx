@@ -6,7 +6,7 @@ export function Minimap() {
   return (
     <div className="flex justify-center items-center p-4 h-full w-full">
       <svg viewBox="0 0 1024 1024" className="h-full w-full">
-        <image href="/de_mirage.png" width="1024" height="1024" />
+        <image href="/de_mirage_filtered.png" width="1024" height="1024" />
 
         <Connection
           from={{ x: 899.46875, y: -1040.25 }}

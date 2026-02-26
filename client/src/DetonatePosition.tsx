@@ -14,8 +14,8 @@ export function DetonatePosition({ x, y, label = "9" }: Props) {
       <circle
         cx={xT}
         cy={yT}
-        r="16"
-        className="fill-amber-600 stroke-amber-600/50 stroke-[8px]"
+        r="20"
+        className="fill-amber-400/50 stroke-amber-400 stroke-[2px] hover:fill-amber-400 transition"
       />
 
       <text
@@ -25,7 +25,7 @@ export function DetonatePosition({ x, y, label = "9" }: Props) {
         fontWeight="bold"
         textAnchor="middle"
         dominantBaseline="central"
-        className="fill-black pointer-events-none select-none"
+        className="fill-white pointer-events-none select-none text-[24px]"
       >
         {label}
       </text>

@@ -15,7 +15,7 @@ export function Connection({ from, to }: ConnectionProps) {
       y1={start.y}
       x2={end.x}
       y2={end.y}
-      className="stroke-amber-600 stroke-[3px]"
+      className="stroke-amber-400 stroke-[2px]"
       strokeDasharray="8 6" // Adjust these numbers for dash/gap length
       strokeLinecap="round"
     />
