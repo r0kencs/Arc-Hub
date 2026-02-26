@@ -3,8 +3,8 @@ import { Position } from "./Position";
 
 export function Minimap() {
   return (
-    <div className="flex justify-center items-center p-4">
-      <svg viewBox="0 0 1024 1024" className="w-[500px] h-[500px]">
+    <div className="flex justify-center items-center p-4 h-full w-full">
+      <svg viewBox="0 0 1024 1024" className="h-full w-full">
         <image href="/de_mirage.png" width="1024" height="1024" />
 
         <Connection
