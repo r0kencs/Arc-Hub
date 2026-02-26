@@ -26,13 +26,10 @@ export function TrajectoryRenderer({
                 key={`segment-${index}`}
                 from={point}
                 to={nextPoint}
+                delay={0.4 * (index + 1)}
               />
             );
           })}
-          <Connection
-            from={trajectory[trajectory.length - 1]}
-            to={detonatePosition}
-          />
         </>
       ) : (
         <Connection from={throwPosition} to={detonatePosition} />
