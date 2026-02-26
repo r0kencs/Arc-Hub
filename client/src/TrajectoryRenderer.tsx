@@ -8,7 +8,7 @@ interface Props {
   trajectory?: { x: number; y: number }[];
 }
 
-export function GrenadeRenderer({
+export function TrajectoryRenderer({
   throwPosition,
   detonatePosition,
   trajectory = [],
