@@ -22,7 +22,7 @@ export function AnimatedPath({ d }: { d: string }) {
       <motion.path
         d={d}
         fill="none"
-        stroke="white"
+        stroke="#ffba00"
         strokeWidth="2"
         strokeLinecap="round"
         mask={`url(#dash-mask-${id})`}
