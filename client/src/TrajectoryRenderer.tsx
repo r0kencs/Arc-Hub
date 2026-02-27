@@ -1,5 +1,4 @@
 import { AnimatedPath } from "./AnimatedPath";
-import { Connection } from "./Connection";
 import { DetonatePosition } from "./DetonatePosition";
 import { translateCoords } from "./positionHelper";
 import { ThrowPosition } from "./ThrowPosition";
