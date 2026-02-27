@@ -1,5 +1,7 @@
+import { AnimatedPath } from "./AnimatedPath";
 import { Connection } from "./Connection";
 import { DetonatePosition } from "./DetonatePosition";
+import { translateCoords } from "./positionHelper";
 import { ThrowPosition } from "./ThrowPosition";
 
 interface Props {
@@ -13,27 +15,21 @@ export function TrajectoryRenderer({
   detonatePosition,
   trajectory = [],
 }: Props) {
+  // 1. Convert all points into the coordinate system
+  const points = [throwPosition, ...trajectory, detonatePosition].map((p) =>
+    translateCoords(p.x, p.y),
+  );
+
+  // 2. Build the SVG path string: "M x1 y1 L x2 y2 L x3 y3..."
+  const pathData = points.reduce((acc, point, i) => {
+    return i === 0
+      ? `M ${point.x} ${point.y}`
+      : `${acc} L ${point.x} ${point.y}`;
+  }, "");
+
   return (
     <>
-      {trajectory.length > 0 ? (
-        <>
-          <Connection from={throwPosition} to={trajectory[0]} />
-          {trajectory.map((point, index) => {
-            const nextPoint = trajectory[index + 1] || detonatePosition;
-
-            return (
-              <Connection
-                key={`segment-${index}`}
-                from={point}
-                to={nextPoint}
-                delay={0.4 * (index + 1)}
-              />
-            );
-          })}
-        </>
-      ) : (
-        <Connection from={throwPosition} to={detonatePosition} />
-      )}
+      <AnimatedPath d={pathData} />
 
       <ThrowPosition x={throwPosition.x} y={throwPosition.y} />
       <DetonatePosition x={detonatePosition.x} y={detonatePosition.y} />
