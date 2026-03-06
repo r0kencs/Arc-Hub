@@ -3,7 +3,7 @@ import { Minimap } from "./Minimap";
 
 function App() {
   return (
-    <div className="bg-slate-950 h-full w-full flex items-center justify-center">
+    <div className="bg-[#0e1117] h-full w-full flex items-center justify-center">
       <Minimap />
     </div>
   );
