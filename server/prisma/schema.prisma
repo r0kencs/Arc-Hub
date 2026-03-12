@@ -17,6 +17,7 @@ model Map {
   id      String    @id
   name    String    @unique
   lineups Lineup[]
+  spawns  Spawn[]
 }
 
 model UtilityType {
@@ -39,6 +40,7 @@ enum MouseClick {
 model Side {
   id      String   @id
   lineups Lineup[] @relation("LineupSides")
+  spawns  Spawn[]
 }
 model Lineup {
   id            String            @id @default(cuid())
@@ -60,4 +62,24 @@ model Lineup {
   z             Float
   pitch         Float
   yaw           Float
+}
+
+model Spawn {
+  id    Int    @id @default(autoincrement())
+  name  String // e.g., "Spawn 1", "Best AWP Spawn"
+  
+  // Relations
+  map   Map    @relation(fields: [mapId], references: [id])
+  mapId String
+  
+  side  Side   @relation(fields: [sideId], references: [id])
+  sideId String
+
+  // Coordinates for the spawn point
+  x     Float
+  y     Float
+  z     Float
+
+  @@unique([mapId, name]) // Prevents duplicate naming on the same map
+  @@index([mapId, sideId]) // Optimized for "Get all T spawns for Mirage"
 }
