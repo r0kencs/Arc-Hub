@@ -16,19 +16,7 @@ datasource db {
 model Map {
   id      String    @id
   name    String    @unique
-  places  Place[]
   lineups Lineup[]
-}
-
-model Place {
-  id            Int       @id @default(autoincrement())
-  name          String
-  map           Map       @relation(fields: [mapId], references: [id])
-  mapId         String
-  lineupsFrom   Lineup[]  @relation("OriginPlace")
-  lineupsTo     Lineup[]  @relation("TargetPlace")
-
-  @@unique([name, mapId])
 }
 
 model UtilityType {
@@ -36,7 +24,6 @@ model UtilityType {
   name      String    @unique
   lineups   Lineup[]
 }
-
 model ThrowTechnique {
   id      String    @id
   name    String    @unique
@@ -48,7 +35,6 @@ enum MouseClick {
   MIDDLE
   RIGHT
 }
-
 model Lineup {
   id            Int               @id @default(autoincrement())
 
@@ -61,12 +47,6 @@ model Lineup {
   techniques    ThrowTechnique[]  @relation("LineupTechniques")
 
   mouseClick    MouseClick        @default(LEFT)
-
-  originPlace   Place             @relation("OriginPlace", fields: [originPlaceId], references: [id])
-  originPlaceId Int
-
-  targetPlace   Place             @relation("TargetPlace", fields: [targetPlaceId], references: [id])
-  targetPlaceId Int
 
   x             Float
   y             Float
