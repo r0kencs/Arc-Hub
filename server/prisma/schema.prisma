@@ -35,11 +35,18 @@ enum MouseClick {
   RIGHT
   BOTH
 }
+
+model Side {
+  id      String   @id
+  lineups Lineup[] @relation("LineupSides")
+}
 model Lineup {
   id            String            @id @default(cuid())
 
   map           Map               @relation(fields: [mapId], references: [id])
   mapId         String
+
+  sides         Side[]            @relation("LineupSides")
 
   type          UtilityType       @relation(fields: [typeId], references: [id])
   typeId        String
