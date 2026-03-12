@@ -62,6 +62,8 @@ model Lineup {
   z             Float
   pitch         Float
   yaw           Float
+
+  @@index([mapId, typeId])
 }
 
 model Spawn {
@@ -83,5 +85,6 @@ model Spawn {
   yaw   Float
 
   @@unique([mapId, name]) // Prevents duplicate naming on the same map
+
   @@index([mapId, sideId]) // Optimized for "Get all T spawns for Mirage"
 }
