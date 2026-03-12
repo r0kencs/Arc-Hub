@@ -1,24 +1,24 @@
 import {
-  TargetIcon,
+  Target03Icon,
   MapsIcon,
-  AiLocation01Icon,
-  Setting01Icon,
+  Location01Icon,
+  Settings01Icon,
   Mouse01Icon,
-} from "@hugeicons/react";
+} from "@hugeicons/core-free-icons";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 const navItems = [
-  { title: "Lineups", icon: TargetIcon, color: "text-rose-500", count: 452 },
+  { title: "Lineups", icon: Target03Icon, color: "text-rose-500", count: 452 },
   { title: "Maps", icon: MapsIcon, color: "text-sky-500", count: 9 },
   {
     title: "Spawns",
-    icon: AiLocation01Icon,
+    icon: Location01Icon,
     color: "text-emerald-500",
     count: 124,
   },
   {
     title: "Settings",
-    icon: Setting01Icon,
+    icon: Settings01Icon,
     color: "text-slate-500",
     count: null,
   },
