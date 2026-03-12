@@ -32,8 +32,8 @@ model ThrowTechnique {
 
 enum MouseClick {
   LEFT
-  MIDDLE
   RIGHT
+  BOTH
 }
 model Lineup {
   id            String            @id @default(cuid())
