@@ -1,40 +1,51 @@
-import { MapsIcon } from "@hugeicons/core-free-icons";
+import { Location, MapsIcon, Target02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarHeader,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
 
-// 1. Update your type to accept the specific icon object type
 type NavItem = {
   title: string;
   url: string;
-  icon: any; // Or 'IconSvgObject' if you want to be specific
+  icon: any;
 };
 
 const items: NavItem[] = [
   {
     title: "Maps",
     url: "./maps",
-    icon: MapsIcon, // This is the object causing the error
+    icon: MapsIcon,
+  },
+  {
+    title: "Spawns",
+    url: "./spawns",
+    icon: Location,
+  },
+  {
+    title: "Lineups",
+    url: "./lineups",
+    icon: Target02Icon,
   },
 ];
 
 export function AppSidebar() {
   return (
     <Sidebar>
+      <SidebarHeader className="p-4">
+        <img src="/logo.svg" className="h-10" />
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="gap-1">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton>
-                <a href={item.url} className="flex gap-2 items-center">
-                  <HugeiconsIcon icon={item.icon} size={20} />
-                  <span>{item.title}</span>
-                </a>
+              <SidebarMenuButton className="">
+                <HugeiconsIcon icon={item.icon} size={20} />
+                <span>{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
