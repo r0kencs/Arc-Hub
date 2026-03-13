@@ -9,27 +9,105 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SpawnsRouteImport } from './routes/spawns'
+import { Route as MapsRouteImport } from './routes/maps'
+import { Route as LineupsRouteImport } from './routes/lineups'
+import { Route as IndexRouteImport } from './routes/index'
 
-export interface FileRoutesByFullPath {}
-export interface FileRoutesByTo {}
+const SpawnsRoute = SpawnsRouteImport.update({
+  id: '/spawns',
+  path: '/spawns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapsRoute = MapsRouteImport.update({
+  id: '/maps',
+  path: '/maps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LineupsRoute = LineupsRouteImport.update({
+  id: '/lineups',
+  path: '/lineups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/lineups': typeof LineupsRoute
+  '/maps': typeof MapsRoute
+  '/spawns': typeof SpawnsRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/lineups': typeof LineupsRoute
+  '/maps': typeof MapsRoute
+  '/spawns': typeof SpawnsRoute
+}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/lineups': typeof LineupsRoute
+  '/maps': typeof MapsRoute
+  '/spawns': typeof SpawnsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths: '/' | '/lineups' | '/maps' | '/spawns'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to: '/' | '/lineups' | '/maps' | '/spawns'
+  id: '__root__' | '/' | '/lineups' | '/maps' | '/spawns'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {}
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  LineupsRoute: typeof LineupsRoute
+  MapsRoute: typeof MapsRoute
+  SpawnsRoute: typeof SpawnsRoute
 }
 
-const rootRouteChildren: RootRouteChildren = {}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/spawns': {
+      id: '/spawns'
+      path: '/spawns'
+      fullPath: '/spawns'
+      preLoaderRoute: typeof SpawnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maps': {
+      id: '/maps'
+      path: '/maps'
+      fullPath: '/maps'
+      preLoaderRoute: typeof MapsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lineups': {
+      id: '/lineups'
+      path: '/lineups'
+      fullPath: '/lineups'
+      preLoaderRoute: typeof LineupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  LineupsRoute: LineupsRoute,
+  MapsRoute: MapsRoute,
+  SpawnsRoute: SpawnsRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

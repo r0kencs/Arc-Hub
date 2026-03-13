@@ -8,6 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
+import { Link } from "@tanstack/react-router";
 
 type NavItem = {
   title: string;
@@ -18,17 +19,17 @@ type NavItem = {
 const items: NavItem[] = [
   {
     title: "Maps",
-    url: "./maps",
+    url: "/maps",
     icon: MapsIcon,
   },
   {
     title: "Spawns",
-    url: "./spawns",
+    url: "/spawns",
     icon: Location,
   },
   {
     title: "Lineups",
-    url: "./lineups",
+    url: "/lineups",
     icon: Target02Icon,
   },
 ];
@@ -43,10 +44,17 @@ export function AppSidebar() {
         <SidebarGroup className="gap-1">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton className="">
-                <HugeiconsIcon icon={item.icon} size={20} />
-                <span>{item.title}</span>
-              </SidebarMenuButton>
+              <Link
+                to={item.url}
+                activeProps={{
+                  className: "flex",
+                }}
+              >
+                <SidebarMenuButton className="">
+                  <HugeiconsIcon icon={item.icon} size={20} />
+                  <span>{item.title}</span>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           ))}
         </SidebarGroup>
