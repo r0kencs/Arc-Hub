@@ -25,39 +25,6 @@ export const Route = createFileRoute("/spawns")({
   component: RouteComponent,
 });
 
-const spawns: Spawn[] = [
-  {
-    id: "audhwhuad",
-    name: "Spawn 1",
-    side: "CT",
-    x: 0,
-    y: 0,
-    z: 0,
-    pitch: 0,
-    yaw: 0,
-  },
-  {
-    id: "djadadjw",
-    name: "Spawn 2",
-    side: "T",
-    x: 0,
-    y: 0,
-    z: 0,
-    pitch: 0,
-    yaw: 0,
-  },
-  {
-    id: "kdbadwak",
-    name: "Spawn 3",
-    side: "CT",
-    x: 0,
-    y: 0,
-    z: 0,
-    pitch: 0,
-    yaw: 0,
-  },
-];
-
 export const columns: ColumnDef<Spawn>[] = [
   {
     accessorKey: "id",
@@ -216,7 +183,7 @@ export function DataTable<TData, TValue>({
 function RouteComponent() {
   return (
     <div className="container mx-auto p-10 w-full">
-      <DataTable columns={columns} data={spawns} />
+      <DataTable columns={columns} data={[]} />
     </div>
   );
 }

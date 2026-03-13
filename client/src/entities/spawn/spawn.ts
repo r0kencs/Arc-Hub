@@ -1,6 +1,10 @@
+import type { Map } from "../map/map";
+
 export interface Spawn {
   id: string;
   name: string;
+
+  map: Map;
 
   side: string;
 
