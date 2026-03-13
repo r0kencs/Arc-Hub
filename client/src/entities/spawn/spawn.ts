@@ -7,7 +7,7 @@ export interface Spawn {
 
   map: Map;
 
-  side: string;
+  sideId: string;
 
   x: number;
   y: number;

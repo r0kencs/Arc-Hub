@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { getAllSpawns } from "../controllers/spawns.controller";
+import {
+  createSpawn,
+  getAllSpawns,
+  updateSpawn,
+} from "../controllers/spawns.controller";
 
 const router = Router();
 
-//router.post("/", createSpawn);
+router.post("/", createSpawn);
+router.patch("/", updateSpawn);
 router.get("/", getAllSpawns);
 
 export default router;
