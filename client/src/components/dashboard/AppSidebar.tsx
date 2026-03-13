@@ -37,7 +37,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
-        <img src="/logo.svg" className="h-10" />
+        <img src="/logo.svg" className="h-8" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup className="gap-1">

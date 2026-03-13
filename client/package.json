@@ -16,6 +16,7 @@
     "@hugeicons/core-free-icons": "^4.0.0",
     "@hugeicons/react": "^1.1.6",
     "@tailwindcss/vite": "^4.2.0",
+    "@tanstack/react-router": "^1.166.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "motion": "^12.34.3",
@@ -28,6 +29,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@tanstack/router-devtools": "^1.166.7",
+    "@tanstack/router-plugin": "^1.166.7",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
