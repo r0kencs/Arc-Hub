@@ -15,23 +15,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
-// Sample Options
-const FRAMEWORKS = [
-  { value: "nextjs", label: "Next.js" },
-  { value: "sveltekit", label: "SvelteKit" },
-  { value: "nuxt", label: "Nuxt.js" },
-  { value: "remix", label: "Remix" },
-];
+import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
 
 export function TagCell({
   initialSelected = [],
+  options,
 }: {
   initialSelected: string[];
+  options: { value: string; label: string }[];
 }) {
   const [selected, setSelected] = React.useState<string[]>(initialSelected);
 
-  const toggleFramework = (value: string) => {
+  const toggleOption = (value: string) => {
     setSelected((current) =>
       current.includes(value)
         ? current.filter((item) => item !== value)
@@ -41,16 +36,22 @@ export function TagCell({
 
   return (
     <div className="flex flex-wrap gap-1 items-center">
-      {/* Render Active Badges */}
-      {selected.map((val) => (
-        <Badge
-          key={val}
-          variant="secondary"
-          className="rounded-sm px-1 font-normal"
-        >
-          {FRAMEWORKS.find((f) => f.value === val)?.label || val}
-        </Badge>
-      ))}
+      {selected.map((val) => {
+        const config = TAG_SIDE_CONFIG[val] || {
+          label: val,
+          className: "bg-secondary",
+        };
+
+        return (
+          <Badge
+            key={val}
+            variant="outline"
+            className={cn("rounded-sm px-1 font-medium ", config.className)}
+          >
+            {config.label}
+          </Badge>
+        );
+      })}
 
       {/* The Combobox Trigger */}
       <Popover>
@@ -59,16 +60,16 @@ export function TagCell({
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
           <Command>
-            <CommandInput placeholder="Search frameworks..." />
+            <CommandInput placeholder="Search options..." />
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
-                {FRAMEWORKS.map((framework) => {
-                  const isSelected = selected.includes(framework.value);
+                {options.map((option) => {
+                  const isSelected = selected.includes(option.value);
                   return (
                     <CommandItem
-                      key={framework.value}
-                      onSelect={() => toggleFramework(framework.value)}
+                      key={option.value}
+                      onSelect={() => toggleOption(option.value)}
                     >
                       <div
                         className={cn(
@@ -80,7 +81,7 @@ export function TagCell({
                       >
                         {/* {isSelected && <Check className="h-3 w-3" />} */}
                       </div>
-                      {framework.label}
+                      {option.label}
                     </CommandItem>
                   );
                 })}

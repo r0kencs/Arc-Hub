@@ -1,3 +1,4 @@
+import { TagCell } from "@/components/dashboard/table/TagCell";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -74,6 +75,22 @@ export const columns: ColumnDef<Spawn>[] = [
     header: "Name",
   },
   {
+    accessorKey: "tags",
+    header: "Tags",
+    cell: ({ row }) => {
+      const tags = row.getValue("tags") as string[];
+      return (
+        <TagCell
+          initialSelected={tags}
+          options={[
+            { value: "CT", label: "CT" },
+            { value: "T", label: "T" },
+          ]}
+        />
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const payment = row.original;
@@ -105,8 +122,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="overflow-hidden rounded-md border">
-        <Table>
+      <div className="overflow-hidden rounded-md border w-full">
+        <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -179,7 +196,7 @@ export function DataTable<TData, TValue>({
 
 function RouteComponent() {
   return (
-    <div className="container mx-auto p-10">
+    <div className="container mx-auto p-10 w-full">
       <DataTable columns={columns} data={spawns} />
     </div>
   );
