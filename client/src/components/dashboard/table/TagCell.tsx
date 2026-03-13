@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Add01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 
 export function TagCell({
   initialSelected = [],
@@ -55,8 +57,8 @@ export function TagCell({
 
       {/* The Combobox Trigger */}
       <Popover>
-        <PopoverTrigger render={<Button variant="outline" size="sm" />}>
-          Add
+        <PopoverTrigger render={<Button variant="outline" size="xs" />}>
+          <HugeiconsIcon icon={Add01Icon} />
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
           <Command>
@@ -73,13 +75,13 @@ export function TagCell({
                     >
                       <div
                         className={cn(
-                          "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                          "mr-2 flex h-4 w-4 items-center justify-center rounded-xs border border-primary",
                           isSelected
                             ? "bg-primary text-primary-foreground"
                             : "opacity-50",
                         )}
                       >
-                        {/* {isSelected && <Check className="h-3 w-3" />} */}
+                        {isSelected && <HugeiconsIcon icon={Tick02Icon} />}
                       </div>
                       {option.label}
                     </CommandItem>
