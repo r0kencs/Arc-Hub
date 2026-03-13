@@ -1,3 +1,4 @@
+import { api } from "@/axios";
 import type { Map } from "../map/map";
 
 export interface Spawn {
@@ -15,3 +16,8 @@ export interface Spawn {
   pitch: number;
   yaw: number;
 }
+
+export const getSpawns = async (): Promise<Spawn[]> => {
+  const { data } = await api.get("/spawns");
+  return data;
+};
