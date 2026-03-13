@@ -8,7 +8,7 @@ import {
 const router = Router();
 
 router.post("/", createSpawn);
-router.patch("/", updateSpawn);
+router.put("/:id", updateSpawn);
 router.get("/", getAllSpawns);
 
 export default router;

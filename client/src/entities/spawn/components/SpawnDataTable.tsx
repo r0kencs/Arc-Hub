@@ -1,14 +1,14 @@
 import { DataTable } from "@/components/dashboard/table/DataTable";
-import { EditableTextCell } from "@/components/dashboard/table/EditableTextCell";
-import { TagCell } from "@/components/dashboard/table/TagCell";
-import { Button } from "@/components/ui/button";
-import { getSpawns, type Spawn } from "@/entities/spawn/spawn";
-import { Delete01Icon } from "@hugeicons/core-free-icons";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getSpawns, updateSpawn, type Spawn } from "../spawn";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "@tanstack/react-query";
-import { type ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { Delete01Icon } from "@hugeicons/core-free-icons";
+import { TagCell } from "@/components/dashboard/table/TagCell";
+import { EditableTextCell } from "@/components/dashboard/table/EditableTextCell";
+import type { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<Spawn>[] = [
+export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
   {
     accessorKey: "id",
     header: "Id",
@@ -17,22 +17,16 @@ export const columns: ColumnDef<Spawn>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ getValue, row, column, table }) => {
+    cell: ({ getValue, row }) => {
       const initialValue = getValue() as string;
+      const spawnId = row.original.id;
 
       return (
         <EditableTextCell
           initialValue={initialValue}
           onSave={(newValue) => {
-            // Option A: Update local table state via meta
-            (table.options.meta as any).updateData(
-              row.index,
-              column.id,
-              newValue,
-            );
-
-            // Option B: Trigger an API call/Toast here
-            console.log(`Updating row ${row.id} to ${newValue}`);
+            // Call the mutation passed from the component
+            updateMutation.mutate({ id: spawnId, data: { name: newValue } });
           }}
         />
       );
@@ -44,6 +38,8 @@ export const columns: ColumnDef<Spawn>[] = [
     size: 30,
     cell: ({ row }) => {
       const tag = row.getValue("sideId") as string;
+      const spawnId = row.original.id;
+
       return (
         <TagCell
           initialSelected={tag}
@@ -51,6 +47,10 @@ export const columns: ColumnDef<Spawn>[] = [
             { value: "CT", label: "CT" },
             { value: "T", label: "T" },
           ]}
+          // Assuming TagCell has an onChange or onSave prop
+          onSave={(newSide) => {
+            updateMutation.mutate({ id: spawnId, data: { sideId: newSide } });
+          }}
         />
       );
     },
@@ -58,26 +58,42 @@ export const columns: ColumnDef<Spawn>[] = [
   {
     id: "actions",
     size: 20,
-    cell: () => {
-      return (
-        <div className="flex justify-end">
-          <Button variant="destructive" className="h-8 w-8 p-0">
-            <HugeiconsIcon icon={Delete01Icon} size={20} />
-          </Button>
-        </div>
-      );
-    },
+    cell: () => (
+      <div className="flex justify-end">
+        <Button variant="destructive" className="h-8 w-8 p-0">
+          <HugeiconsIcon icon={Delete01Icon} size={20} />
+        </Button>
+      </div>
+    ),
   },
 ];
 
 export function SpawnDataTable() {
+  const queryClient = useQueryClient();
+
+  // 1. Fetching logic
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["spawns"], // cache key
+    queryKey: ["spawns"],
     queryFn: getSpawns,
+  });
+
+  // 2. Mutation logic
+  const mutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Spawn> }) =>
+      updateSpawn(id, data),
+    onSuccess: () => {
+      // Refresh the table data
+      queryClient.invalidateQueries({ queryKey: ["spawns"] });
+      //toast.success("Spawn updated successfully");
+    },
+    onError: () => {
+      ///toast.error("Failed to update spawn");
+    },
   });
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {(error as Error).message}</p>;
 
-  return <DataTable columns={columns} data={data as Spawn[]} />;
+  // Pass the mutation to the columns function
+  return <DataTable columns={columns(mutation)} data={data as Spawn[]} />;
 }

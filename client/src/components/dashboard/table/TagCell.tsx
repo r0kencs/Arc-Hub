@@ -22,14 +22,21 @@ import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
 export function TagCell({
   initialSelected,
   options,
+  onSave, // New prop
 }: {
   initialSelected: string;
   options: { value: string; label: string }[];
+  onSave?: (newValue: string) => void; // Define the type
 }) {
   const [selected, setSelected] = React.useState<string>(initialSelected);
+  const [open, setOpen] = React.useState(false); // Controls popover visibility
 
   const selectOption = (value: string) => {
     setSelected(value);
+    setOpen(false); // Close menu on select
+    if (onSave) {
+      onSave(value); // Trigger the API call
+    }
   };
 
   const config = TAG_SIDE_CONFIG[selected] || {
@@ -46,9 +53,13 @@ export function TagCell({
         {config.label}
       </Badge>
 
-      <Popover>
-        <PopoverTrigger render={<Button variant="outline" size="xs" />}>
-          <HugeiconsIcon icon={ArrowDown01Icon} />
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
+          render={
+            <Button variant="outline" size="xs" className="h-6 w-6 p-0" />
+          }
+        >
+          <HugeiconsIcon icon={ArrowDown01Icon} size={14} />
         </PopoverTrigger>
         <PopoverContent className="w-50 p-0" align="start">
           <Command>
