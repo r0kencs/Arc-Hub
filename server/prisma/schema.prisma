@@ -67,7 +67,7 @@ model Lineup {
 }
 
 model Spawn {
-  id    Int    @id @default(autoincrement())
+  id    String    @id @default(cuid())
   name  String // e.g., "Spawn 1", "Best AWP Spawn"
   
   // Relations
