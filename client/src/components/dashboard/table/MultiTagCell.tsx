@@ -1,13 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import * as React from "react";
-import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Add01Icon,
-  ArrowDown01Icon,
-  Tick02Icon,
-} from "@hugeicons/core-free-icons";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -21,38 +14,51 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Add01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 
-export function TagCell({
-  initialSelected,
+export function MultiTagCell({
+  initialSelected = [],
   options,
 }: {
-  initialSelected: string;
+  initialSelected: string[];
   options: { value: string; label: string }[];
 }) {
-  const [selected, setSelected] = React.useState<string>(initialSelected);
+  const [selected, setSelected] = React.useState<string[]>(initialSelected);
 
-  const selectOption = (value: string) => {
-    setSelected(value);
-  };
-
-  const config = TAG_SIDE_CONFIG[selected] || {
-    label: selected,
-    className: "bg-secondary",
+  const toggleOption = (value: string) => {
+    setSelected((current) =>
+      current.includes(value)
+        ? current.filter((item) => item !== value)
+        : [...current, value],
+    );
   };
 
   return (
     <div className="flex flex-wrap gap-1 items-center">
-      <Badge
-        variant="outline"
-        className={cn("rounded-sm px-1 font-medium ", config.className)}
-      >
-        {config.label}
-      </Badge>
+      {selected.map((val) => {
+        const config = TAG_SIDE_CONFIG[val] || {
+          label: val,
+          className: "bg-secondary",
+        };
 
+        return (
+          <Badge
+            key={val}
+            variant="outline"
+            className={cn("rounded-sm px-1 font-medium ", config.className)}
+          >
+            {config.label}
+          </Badge>
+        );
+      })}
+
+      {/* The Combobox Trigger */}
       <Popover>
         <PopoverTrigger render={<Button variant="outline" size="xs" />}>
-          <HugeiconsIcon icon={ArrowDown01Icon} />
+          <HugeiconsIcon icon={Add01Icon} />
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
           <Command>
@@ -61,11 +67,11 @@ export function TagCell({
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => {
-                  const isSelected = selected === option.value;
+                  const isSelected = selected.includes(option.value);
                   return (
                     <CommandItem
                       key={option.value}
-                      onSelect={() => selectOption(option.value)}
+                      onSelect={() => toggleOption(option.value)}
                     >
                       <div
                         className={cn(

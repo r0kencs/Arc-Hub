@@ -1,3 +1,4 @@
+import { EditableTextCell } from "@/components/dashboard/table/EditableTextCell";
 import { TagCell } from "@/components/dashboard/table/TagCell";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Delete, Delete01Icon } from "@hugeicons/core-free-icons";
+import { Delete01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
@@ -27,6 +28,8 @@ type Spawn = {
   id: string;
   name: string;
 
+  side: string;
+
   x: number;
   y: number;
   z: number;
@@ -39,6 +42,7 @@ const spawns: Spawn[] = [
   {
     id: "audhwhuad",
     name: "Spawn 1",
+    side: "CT",
     x: 0,
     y: 0,
     z: 0,
@@ -48,6 +52,7 @@ const spawns: Spawn[] = [
   {
     id: "djadadjw",
     name: "Spawn 2",
+    side: "T",
     x: 0,
     y: 0,
     z: 0,
@@ -57,6 +62,7 @@ const spawns: Spawn[] = [
   {
     id: "kdbadwak",
     name: "Spawn 3",
+    side: "CT",
     x: 0,
     y: 0,
     z: 0,
@@ -69,16 +75,38 @@ export const columns: ColumnDef<Spawn>[] = [
   {
     accessorKey: "id",
     header: "Id",
+    size: 50,
   },
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ getValue, row, column, table }) => {
+      const initialValue = getValue() as string;
+
+      return (
+        <EditableTextCell
+          initialValue={initialValue}
+          onSave={(newValue) => {
+            // Option A: Update local table state via meta
+            (table.options.meta as any).updateData(
+              row.index,
+              column.id,
+              newValue,
+            );
+
+            // Option B: Trigger an API call/Toast here
+            console.log(`Updating row ${row.id} to ${newValue}`);
+          }}
+        />
+      );
+    },
   },
   {
-    accessorKey: "tags",
-    header: "Tags",
+    accessorKey: "side",
+    header: "Side",
+    size: 30,
     cell: ({ row }) => {
-      const tags = row.getValue("tags") as string[];
+      const tags = row.getValue("side") as string;
       return (
         <TagCell
           initialSelected={tags}
@@ -92,13 +120,16 @@ export const columns: ColumnDef<Spawn>[] = [
   },
   {
     id: "actions",
+    size: 20,
     cell: ({ row }) => {
       const payment = row.original;
 
       return (
-        <Button variant="destructive" className="h-8 w-8 p-0">
-          <HugeiconsIcon icon={Delete01Icon} size={20} />
-        </Button>
+        <div className="flex justify-end">
+          <Button variant="destructive" className="h-8 w-8 p-0">
+            <HugeiconsIcon icon={Delete01Icon} size={20} />
+          </Button>
+        </div>
       );
     },
   },
@@ -122,14 +153,17 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="overflow-hidden rounded-md border w-full">
-        <Table className="w-full">
+      <div className="overflow-hidden rounded-md border">
+        <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      style={{ width: `${header.getSize()}px` }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
