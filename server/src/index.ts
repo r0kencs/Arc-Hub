@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 
 import mapRoutes from "./routes/map.routes";
+import spawnRoutes from "./routes/spawn.routes";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/maps", mapRoutes);
+app.use("/api/spawns", spawnRoutes);
 
 const PORT = process.env.PORT || 5000;
 
