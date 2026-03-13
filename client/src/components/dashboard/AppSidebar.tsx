@@ -1,5 +1,6 @@
 import { Location, MapsIcon, Target02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Link } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -8,7 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { Link } from "@tanstack/react-router";
 
 type NavItem = {
   title: string;
@@ -44,16 +44,13 @@ export function AppSidebar() {
         <SidebarGroup className="gap-1">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <Link
-                to={item.url}
-                activeProps={{
-                  className: "flex",
-                }}
-              >
-                <SidebarMenuButton className="">
-                  <HugeiconsIcon icon={item.icon} size={20} />
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
+              <Link to={item.url}>
+                {({ isActive }) => (
+                  <SidebarMenuButton isActive={isActive}>
+                    <HugeiconsIcon icon={item.icon} size={20} />
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                )}
               </Link>
             </SidebarMenuItem>
           ))}
