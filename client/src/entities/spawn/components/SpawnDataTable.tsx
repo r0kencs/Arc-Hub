@@ -77,17 +77,38 @@ export function SpawnDataTable() {
     queryFn: getSpawns,
   });
 
-  // 2. Mutation logic
   const mutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Spawn> }) =>
       updateSpawn(id, data),
-    onSuccess: () => {
-      // Refresh the table data
-      queryClient.invalidateQueries({ queryKey: ["spawns"] });
-      //toast.success("Spawn updated successfully");
+
+    // Step 1: When mutate is called
+    onMutate: async (newSpawn) => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
+      await queryClient.cancelQueries({ queryKey: ["spawns"] });
+
+      // Snapshot the previous value
+      const previousSpawns = queryClient.getQueryData<Spawn[]>(["spawns"]);
+
+      // Step 2: Optimistically update to the new value
+      queryClient.setQueryData<Spawn[]>(["spawns"], (old) =>
+        old?.map((spawn) =>
+          spawn.id === newSpawn.id ? { ...spawn, ...newSpawn.data } : spawn,
+        ),
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousSpawns };
     },
-    onError: () => {
-      ///toast.error("Failed to update spawn");
+
+    // Step 3: If the mutation fails, use the context we returned above
+    onError: (err, newSpawn, context) => {
+      queryClient.setQueryData(["spawns"], context?.previousSpawns);
+      //toast.error("Update failed. Reverting changes...");
+    },
+
+    // Step 4: Always refetch after error or success to sync with the server
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["spawns"] });
     },
   });
 
