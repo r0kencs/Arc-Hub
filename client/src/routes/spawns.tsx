@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { Spawn } from "@/entities/spawn/spawn";
 import { Delete01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -23,20 +24,6 @@ import {
 export const Route = createFileRoute("/spawns")({
   component: RouteComponent,
 });
-
-type Spawn = {
-  id: string;
-  name: string;
-
-  side: string;
-
-  x: number;
-  y: number;
-  z: number;
-
-  pitch: number;
-  yaw: number;
-};
 
 const spawns: Spawn[] = [
   {
