@@ -121,9 +121,7 @@ export const columns: ColumnDef<Spawn>[] = [
   {
     id: "actions",
     size: 20,
-    cell: ({ row }) => {
-      const payment = row.original;
-
+    cell: () => {
       return (
         <div className="flex justify-end">
           <Button variant="destructive" className="h-8 w-8 p-0">

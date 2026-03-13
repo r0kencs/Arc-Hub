@@ -1,13 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import * as React from "react";
-import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Add01Icon,
-  ArrowDown01Icon,
-  Tick02Icon,
-} from "@hugeicons/core-free-icons";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -21,7 +13,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import * as React from "react";
+import { TAG_SIDE_CONFIG } from "./TagColorConfigs";
 
 export function TagCell({
   initialSelected,
@@ -54,7 +50,7 @@ export function TagCell({
         <PopoverTrigger render={<Button variant="outline" size="xs" />}>
           <HugeiconsIcon icon={ArrowDown01Icon} />
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-50 p-0" align="start">
           <Command>
             <CommandInput placeholder="Search options..." />
             <CommandList>

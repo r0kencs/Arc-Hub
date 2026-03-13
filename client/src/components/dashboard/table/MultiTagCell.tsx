@@ -60,7 +60,7 @@ export function MultiTagCell({
         <PopoverTrigger render={<Button variant="outline" size="xs" />}>
           <HugeiconsIcon icon={Add01Icon} />
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-50 p-0" align="start">
           <Command>
             <CommandInput placeholder="Search options..." />
             <CommandList>
