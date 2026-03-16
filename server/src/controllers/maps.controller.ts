@@ -1,15 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 
-export const getAllMaps = async (req: Request, res: Response) => {
-  try {
-    const maps = await prisma.map.findMany();
-    res.status(200).json(maps);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
 export const createMap = async (req: Request, res: Response) => {
   try {
     const { id, name } = req.body;
@@ -33,8 +24,7 @@ export const getMapById = async (req: Request, res: Response) => {
   try {
     const map = await prisma.map.findUnique({
       where: { id },
-    },
-  );
+    });
 
     if (!map) {
       return res.status(404).json({ error: "Map not found" });
@@ -46,16 +36,27 @@ export const getMapById = async (req: Request, res: Response) => {
   }
 };
 
-export const getMapLineups = async (req: Request, res: Response) => {
+export const getAllMaps = async (req: Request, res: Response) => {
+  try {
+    const maps = await prisma.map.findMany();
+    res.status(200).json(maps);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const updateMap = async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
+  const { name } = req.body;
 
   try {
-    const lineups = await prisma.map.findUnique({
-      where: { id }
-    }).lineups(); 
-    
-    res.status(200).json(lineups)
+    const updatedMap = await prisma.map.update({
+      where: { id },
+      data: { name },
+    });
+
+    res.status(200).json(updateMap);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" })
+    res.status(404).json({ error: "Map not found or update failed" });
   }
-}
+};
