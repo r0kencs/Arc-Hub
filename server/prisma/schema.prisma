@@ -46,6 +46,8 @@ model Side {
 model Lineup {
   id            String            @id @default(cuid())
 
+  name          String
+
   map           Map               @relation(fields: [mapId], references: [id])
   mapId         String
 
