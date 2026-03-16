@@ -10,14 +10,31 @@ const maps = [
   { id: "de_anubis", name: "Anubis" },
 ];
 
+const utilityTypes = [
+  { id: "smoke", name: "Smoke" },
+  { id: "molotov", name: "Molotov" },
+  { id: "flashbang", name: "Flashbang" },
+  { id: "hegrenade", name: "HE Grenade" },
+];
+
 async function main() {
-  for (const map of maps) {
+  /* for (const map of maps) {
     await prisma.map.upsert({
       where: { id: map.id },
       update: {},
       create: map,
     });
-  }
+  } */
+
+  await prisma.map.createMany({
+    data: maps,
+    skipDuplicates: true,
+  });
+
+  await prisma.utilityType.createMany({
+    data: utilityTypes,
+    skipDuplicates: true,
+  });
 }
 
 main()
