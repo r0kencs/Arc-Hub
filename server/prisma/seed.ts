@@ -25,6 +25,8 @@ const throwTechniques = [
   { id: "w", name: "W" },
 ];
 
+const sides = [{ id: "CT" }, { id: "T" }];
+
 async function main() {
   /* for (const map of maps) {
     await prisma.map.upsert({
@@ -46,6 +48,11 @@ async function main() {
 
   await prisma.throwTechnique.createMany({
     data: throwTechniques,
+    skipDuplicates: true,
+  });
+
+  await prisma.side.createMany({
+    data: sides,
     skipDuplicates: true,
   });
 }
