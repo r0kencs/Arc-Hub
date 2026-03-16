@@ -5,14 +5,13 @@ export const createMap = async (req: Request, res: Response) => {
   try {
     const { id, name } = req.body;
 
-    const newMap = await prisma.map.create({
-      data: {
-        id,
-        name,
-      },
+    const map = await prisma.map.upsert({
+      where: { id: id },
+      update: { name: name },
+      create: { id: id, name: name },
     });
 
-    res.status(201).json(newMap);
+    res.status(201).json(map);
   } catch (error) {
     res.status(400).json({ error: "Map already exists or invalid data" });
   }
