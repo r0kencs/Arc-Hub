@@ -81,8 +81,6 @@ model Spawn {
   x     Float
   y     Float
   z     Float
-  pitch Float
-  yaw   Float
 
   @@unique([mapId, name]) // Prevents duplicate naming on the same map
 
