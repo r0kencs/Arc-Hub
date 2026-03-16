@@ -17,6 +17,14 @@ const utilityTypes = [
   { id: "hegrenade", name: "HE Grenade" },
 ];
 
+const throwTechniques = [
+  { id: "jump", name: "Jump" },
+  { id: "run", name: "Running" },
+  { id: "walk", name: "Walking" },
+  { id: "crouch", name: "Crouching" },
+  { id: "w", name: "W" },
+];
+
 async function main() {
   /* for (const map of maps) {
     await prisma.map.upsert({
@@ -33,6 +41,11 @@ async function main() {
 
   await prisma.utilityType.createMany({
     data: utilityTypes,
+    skipDuplicates: true,
+  });
+
+  await prisma.throwTechnique.createMany({
+    data: throwTechniques,
     skipDuplicates: true,
   });
 }
