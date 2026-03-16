@@ -42,6 +42,7 @@ model Side {
   lineups Lineup[] @relation("LineupSides")
   spawns  Spawn[]
 }
+
 model Lineup {
   id            String            @id @default(cuid())
 
