@@ -18,7 +18,7 @@ export const createMap = async (req: Request, res: Response) => {
   }
 };
 
-export const getMapById = async (req: Request, res: Response) => {
+export const getMap = async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
 
   try {
@@ -55,7 +55,7 @@ export const updateMap = async (req: Request, res: Response) => {
       data: { name },
     });
 
-    res.status(200).json(updateMap);
+    res.status(200).json(updatedMap);
   } catch (error) {
     res.status(404).json({ error: "Map not found or update failed" });
   }
