@@ -65,7 +65,7 @@ export const deleteMap = async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
 
   try {
-    const updatedMap = await prisma.map.delete({
+    await prisma.map.delete({
       where: { id },
     });
 
