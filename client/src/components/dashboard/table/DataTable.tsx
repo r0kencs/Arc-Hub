@@ -55,16 +55,16 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {/* Table Container */}
       <div className="rounded-md border overflow-hidden">
-        <Table className="table-fixed">
+        <Table className="table-fixed p-2">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="">
-                {headerGroup.headers.map((header) => {
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header, i) => {
                   return (
                     <TableHead
                       key={header.id}
                       style={{ width: `${header.getSize()}px` }}
-                      className="text-center"
+                      className="px-2 py-3"
                     >
                       {header.isPlaceholder
                         ? null
@@ -86,7 +86,10 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className="overflow-hidden text-ellipsis"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
