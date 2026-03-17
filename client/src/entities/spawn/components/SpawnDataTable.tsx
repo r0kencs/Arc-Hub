@@ -53,16 +53,12 @@ export const columns = (
     header: "Side",
     size: 30,
     cell: ({ row }) => {
-      const tag = row.getValue("sideId") as string;
+      const side = row.getValue("sideId") as string;
       const spawnId = row.original.id;
       return (
-        <TagCell
-          initialSelected={tag}
-          options={[
-            { value: "CT", label: "CT" },
-            { value: "T", label: "T" },
-          ]}
-          onSave={(newSide) => {
+        <SideSelect
+          value={side}
+          onChange={(newSide) => {
             updateMutation.mutate({ id: spawnId, data: { sideId: newSide } });
           }}
         />
@@ -176,7 +172,6 @@ export function SpawnDataTable() {
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <div className="flex justify-between w-full px-4">
-        <SideSelect />
         <h2 className="text-xl font-bold">Map Spawns</h2>
         <SpawnPopoverCreate
           onCreate={(payload) => createMutation.mutate(payload)}

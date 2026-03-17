@@ -23,12 +23,13 @@ interface SideSelectProps {
 export function SideSelect({ value, onChange }: SideSelectProps) {
   return (
     <Select
+      value={value}
       onValueChange={(val) => {
         onChange(val as string);
       }}
     >
       <SelectTrigger
-        className={`w-full ${value === "CT" ? "bg-blue-600/40! border-blue-600" : value === "T" ? "bg-amber-600/40! border-amber-600" : ""}`}
+        className={`w-full ${value === "CT" ? "bg-blue-600/40! border-blue-600 [&>svg]:text-blue-600" : value === "T" ? "bg-amber-600/40! border-amber-600 [&>svg]:text-amber-600" : ""}`}
       >
         <SelectValue
           placeholder="Select a side"
