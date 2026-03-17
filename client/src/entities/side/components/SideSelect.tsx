@@ -40,7 +40,9 @@ export function SideSelect({ value, onChange }: SideSelectProps) {
         <SelectGroup>
           <SelectLabel>Sides</SelectLabel>
           {sides.map((side) => (
-            <SelectItem value={side.value}>{side.value}</SelectItem>
+            <SelectItem key={side.value} value={side.value}>
+              {side.value}
+            </SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>

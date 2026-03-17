@@ -21,6 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { SpawnPopoverCreate } from "./SpawnPopoverCreate";
 import { SideSelect } from "@/entities/side/components/SideSelect";
+import { MapSelect } from "@/entities/map/components/MapSelect";
+import type { Map } from "@/entities/map/map";
 
 // Column Definitions
 export const columns = (
@@ -49,9 +51,26 @@ export const columns = (
     },
   },
   {
+    accessorKey: "map",
+    header: "Map",
+    size: 60,
+    cell: ({ row }) => {
+      const map = row.getValue("map") as Map;
+      const spawnId = row.original.id;
+      return (
+        <MapSelect
+          value={map}
+          onChange={(newMap) => {
+            updateMutation.mutate({ id: spawnId, data: { mapId: newMap.id } });
+          }}
+        />
+      );
+    },
+  },
+  {
     accessorKey: "sideId",
     header: "Side",
-    size: 30,
+    size: 40,
     cell: ({ row }) => {
       const side = row.getValue("sideId") as string;
       const spawnId = row.original.id;
@@ -128,6 +147,8 @@ export function SpawnDataTable() {
     queryKey: ["spawns"],
     queryFn: getSpawns,
   });
+
+  console.log(data);
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Spawn> }) =>
