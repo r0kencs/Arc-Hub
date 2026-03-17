@@ -9,17 +9,13 @@ import {
 } from "@/components/ui/select";
 import type { Map } from "../map";
 
-const maps: Map[] = [
-  { id: "de_mirage", name: "Mirage" },
-  { id: "de_ancient", name: "Ancient" },
-];
-
 interface MapSelectProps {
   value: Map | null;
+  maps: Map[];
   onChange: (value: Map) => void;
 }
 
-export function MapSelect({ value, onChange }: MapSelectProps) {
+export function MapSelect({ value, maps, onChange }: MapSelectProps) {
   return (
     <Select
       value={value?.id}
