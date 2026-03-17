@@ -14,16 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { MapSelect } from "@/entities/map/components/MapSelect";
+import type { Map } from "@/entities/map/map";
 import { parseSetPos } from "@/entities/position/position";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface SpawnPopoverCreateProps {
+  maps: Map[];
   onCreate: (data: any) => void;
 }
 
-export function SpawnPopoverCreate({ onCreate }: SpawnPopoverCreateProps) {
-  const [map, setMap] = useState<string>("");
+export function SpawnPopoverCreate({
+  maps,
+  onCreate,
+}: SpawnPopoverCreateProps) {
+  const [map, setMap] = useState<Map>();
   const [side, setSide] = useState<string>("");
   const [setPos, setSetPos] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -42,7 +48,7 @@ export function SpawnPopoverCreate({ onCreate }: SpawnPopoverCreateProps) {
 
     onCreate({
       name: `${side} Spawn - ${map}`,
-      mapId: map,
+      mapId: map?.id,
       sideId: side,
       x: position.x,
       y: position.y,
@@ -62,22 +68,13 @@ export function SpawnPopoverCreate({ onCreate }: SpawnPopoverCreateProps) {
           <div className="grid gap-2">
             <div className="grid grid-cols-4 gap-2">
               <div className="col-span-3">
-                <Select
-                  onValueChange={(val) => {
-                    setMap(val as string);
+                <MapSelect
+                  value={map as Map}
+                  maps={maps}
+                  onChange={(map) => {
+                    setMap(map);
                   }}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a map" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Maps</SelectLabel>
-                      <SelectItem value="de_mirage">Mirage</SelectItem>
-                      <SelectItem value="de_ancient">Ancient</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                />
               </div>
               <div className="col-span-1">
                 <Select

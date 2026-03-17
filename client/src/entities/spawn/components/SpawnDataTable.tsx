@@ -70,6 +70,7 @@ export function SpawnDataTable() {
       <div className="flex justify-between w-full px-4">
         <h2 className="text-xl font-bold">Map Spawns</h2>
         <SpawnPopoverCreate
+          maps={maps}
           onCreate={(payload) => createMutation.mutate(payload)}
         />
       </div>
