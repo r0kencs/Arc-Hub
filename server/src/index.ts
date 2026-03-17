@@ -3,8 +3,11 @@ import dotenv from "dotenv";
 import express from "express";
 
 import mapRoutes from "./routes/map.routes";
-import spawnRoutes from "./routes/spawn.route";
-import lineupRoutes from "./routes/lineup.route";
+import sideRoutes from "./routes/side.routes";
+import utilityTypeRoutes from "./routes/utilityType.routes";
+import throwTechniqueRoutes from "./routes/throwTechnique.routes";
+import spawnRoutes from "./routes/spawn.routes";
+import lineupRoutes from "./routes/lineup.routes";
 
 dotenv.config();
 
@@ -18,6 +21,9 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/maps", mapRoutes);
+app.use("/api/sides", sideRoutes);
+app.use("/api/utilityTypes", utilityTypeRoutes);
+app.use("/api/throwTechniques", throwTechniqueRoutes);
 app.use("/api/spawns", spawnRoutes);
 app.use("/api/lineups", lineupRoutes);
 
