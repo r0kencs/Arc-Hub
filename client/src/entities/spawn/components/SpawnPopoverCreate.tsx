@@ -14,9 +14,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { parseSetPos } from "@/entities/position/position";
 import { useState } from "react";
+import { toast } from "sonner";
 
-export function SpawnPopoverCreate() {
+interface SpawnPopoverCreateProps {
+  onCreate: (data: any) => void;
+}
+
+export function SpawnPopoverCreate({ onCreate }: SpawnPopoverCreateProps) {
   const [map, setMap] = useState<string>("");
   const [side, setSide] = useState<string>("");
   const [setPos, setSetPos] = useState<string>("");
@@ -24,22 +30,26 @@ export function SpawnPopoverCreate() {
 
   const handleCreate = () => {
     if (!map || !side || !setPos) {
-      alert("Please fill in all fields");
+      toast.warning("Please fill all fields");
       return;
     }
 
-    const payload = {
-      map,
-      side,
-      setPosCommand: setPos,
-    };
+    const position = parseSetPos(setPos);
+    if (!position) {
+      toast.error("Invalid setpos format. Please copy exactly from console.");
+      return;
+    }
 
-    console.log("Creating Spawn:", payload);
+    onCreate({
+      name: `${side} Spawn - ${map}`,
+      mapId: map,
+      sideId: side,
+      x: position.x,
+      y: position.y,
+      z: position.z,
+    });
 
-    // Add your API call or parent function here
-    // Example: await createSpawn(payload);
-
-    setOpen(false); // Close the popover on success
+    setOpen(false);
   };
 
   return (

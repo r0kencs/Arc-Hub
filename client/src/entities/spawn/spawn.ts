@@ -1,23 +1,19 @@
 import { api } from "@/axios";
 import type { Map } from "../map/map";
+import type { Position } from "../position/position";
 
 // 1. Define the Side interface (matching your schema)
 export interface Side {
   id: string;
 }
 
-export interface Spawn {
+export interface Spawn extends Position {
   id: string;
   name: string;
   mapId: string; // Included for direct reference
   map: Map;
   sideId: string;
   side: Side; // Added to match the Prisma 'include'
-  x: number;
-  y: number;
-  z: number;
-  pitch: number;
-  yaw: number;
 }
 
 // 2. Helper type for creating a new spawn (omits the generated ID and nested objects)
@@ -42,5 +38,10 @@ export const updateSpawn = async (
   spawnData: Partial<CreateSpawnInput>,
 ): Promise<Spawn> => {
   const { data } = await api.put(`/spawns/${id}`, spawnData);
+  return data;
+};
+
+export const deleteSpawn = async (id: string): Promise<void> => {
+  const { data } = await api.delete(`/spawns/${id}`);
   return data;
 };

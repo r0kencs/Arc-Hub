@@ -1,6 +1,12 @@
 import { DataTable } from "@/components/dashboard/table/DataTable";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSpawns, updateSpawn, type Spawn } from "../spawn";
+import {
+  getSpawns,
+  updateSpawn,
+  createSpawn,
+  type Spawn,
+  deleteSpawn,
+} from "../spawn";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,34 +18,14 @@ import { TagCell } from "@/components/dashboard/table/TagCell";
 import { EditableTextCell } from "@/components/dashboard/table/EditableTextCell";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { toast, useSonner } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { toast } from "sonner";
 import { SpawnPopoverCreate } from "./SpawnPopoverCreate";
 
-export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
+// Column Definitions
+export const columns = (
+  updateMutation: any,
+  deleteMutation: any,
+): ColumnDef<Spawn>[] => [
   {
     accessorKey: "id",
     header: "Id",
@@ -51,12 +37,10 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
     cell: ({ getValue, row }) => {
       const initialValue = getValue() as string;
       const spawnId = row.original.id;
-
       return (
         <EditableTextCell
           initialValue={initialValue}
           onSave={(newValue) => {
-            // Call the mutation passed from the component
             updateMutation.mutate({ id: spawnId, data: { name: newValue } });
           }}
         />
@@ -70,7 +54,6 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
     cell: ({ row }) => {
       const tag = row.getValue("sideId") as string;
       const spawnId = row.original.id;
-
       return (
         <TagCell
           initialSelected={tag}
@@ -78,7 +61,6 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
             { value: "CT", label: "CT" },
             { value: "T", label: "T" },
           ]}
-          // Assuming TagCell has an onChange or onSave prop
           onSave={(newSide) => {
             updateMutation.mutate({ id: spawnId, data: { sideId: newSide } });
           }}
@@ -96,9 +78,7 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
       const handleCopy = async () => {
         try {
           await navigator.clipboard.writeText(posString);
-          toast.success("Coordinates copied", {
-            description: "Ready to paste into console.",
-          });
+          toast.success("Coordinates copied");
         } catch (err) {
           console.error("Failed to copy!", err);
         }
@@ -106,20 +86,18 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
 
       return (
         <div className="flex items-center gap-1">
-          <Badge className="font-mono text-xs rounded-sm bg-transparent text-white">
+          <Badge className="font-mono text-xs rounded-sm bg-transparent text-white border-zinc-800">
             {`${x.toFixed(2)} / ${y.toFixed(2)} / ${z.toFixed(2)}`}
           </Badge>
-
           <Button
             variant="ghost"
-            size="xs"
-            className="h-8 w-8 p-0"
+            size="icon"
+            className="h-8 w-8"
             onClick={handleCopy}
           >
             <HugeiconsIcon icon={Copy01Icon} size={16} />
           </Button>
-
-          <Button variant="ghost" size="xs" className="h-8 w-8 p-0">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
             <HugeiconsIcon icon={UploadSquare01Icon} size={16} />
           </Button>
         </div>
@@ -129,10 +107,17 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
   {
     id: "actions",
     size: 20,
-    cell: () => (
+    cell: ({ row }) => (
       <div className="flex justify-end">
-        <Button variant="destructive" className="h-8 w-8 p-0">
-          <HugeiconsIcon icon={Delete01Icon} size={20} />
+        <Button
+          variant="destructive"
+          className="h-8 w-8 p-0"
+          onClick={() => {
+            if (confirm("Are you sure?"))
+              deleteMutation.mutate(row.original.id);
+          }}
+        >
+          <HugeiconsIcon icon={Delete01Icon} size={18} />
         </Button>
       </div>
     ),
@@ -142,55 +127,63 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
 export function SpawnDataTable() {
   const queryClient = useQueryClient();
 
-  // 1. Fetching logic
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["spawns"],
     queryFn: getSpawns,
   });
 
-  const mutation = useMutation({
+  const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Spawn> }) =>
       updateSpawn(id, data),
-
-    // Step 1: When mutate is called
     onMutate: async (newSpawn) => {
-      // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await queryClient.cancelQueries({ queryKey: ["spawns"] });
-
-      // Snapshot the previous value
       const previousSpawns = queryClient.getQueryData<Spawn[]>(["spawns"]);
-
-      // Step 2: Optimistically update to the new value
       queryClient.setQueryData<Spawn[]>(["spawns"], (old) =>
         old?.map((spawn) =>
           spawn.id === newSpawn.id ? { ...spawn, ...newSpawn.data } : spawn,
         ),
       );
-
-      // Return a context object with the snapshotted value
       return { previousSpawns };
     },
-
-    // Step 3: If the mutation fails, use the context we returned above
     onError: (err, newSpawn, context) => {
       queryClient.setQueryData(["spawns"], context?.previousSpawns);
-      //toast.error("Update failed. Reverting changes...");
+      toast.error("Update failed");
     },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["spawns"] }),
+  });
 
-    // Step 4: Always refetch after error or success to sync with the server
-    onSettled: () => {
+  const createMutation = useMutation({
+    mutationFn: (newSpawn: Omit<Spawn, "id">) => createSpawn(newSpawn),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["spawns"] });
+      toast.success("Spawn created!");
+    },
+    onError: () => toast.error("Failed to create spawn"),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteSpawn(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["spawns"] });
+      toast.success("Spawn deleted");
     },
   });
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {(error as Error).message}</p>;
 
-  // Pass the mutation to the columns function
   return (
-    <div className="flex flex-col items-center gap-4">
-      <SpawnPopoverCreate />
-      <DataTable columns={columns(mutation)} data={data as Spawn[]} />
+    <div className="flex flex-col items-center gap-4 w-full">
+      <div className="flex justify-between w-full px-4">
+        <h2 className="text-xl font-bold">Map Spawns</h2>
+        <SpawnPopoverCreate
+          onCreate={(payload) => createMutation.mutate(payload)}
+        />
+      </div>
+      <DataTable
+        columns={columns(updateMutation, deleteMutation)}
+        data={data as Spawn[]}
+      />
     </div>
   );
 }
