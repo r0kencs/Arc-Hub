@@ -20,6 +20,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { SpawnPopoverCreate } from "./SpawnPopoverCreate";
+import { SideSelect } from "@/entities/side/components/SideSelect";
 
 // Column Definitions
 export const columns = (
@@ -175,6 +176,7 @@ export function SpawnDataTable() {
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <div className="flex justify-between w-full px-4">
+        <SideSelect />
         <h2 className="text-xl font-bold">Map Spawns</h2>
         <SpawnPopoverCreate
           onCreate={(payload) => createMutation.mutate(payload)}
