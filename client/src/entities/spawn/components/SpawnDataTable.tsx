@@ -3,10 +3,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSpawns, updateSpawn, type Spawn } from "../spawn";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "@/components/ui/button";
-import { Delete01Icon } from "@hugeicons/core-free-icons";
+import {
+  Copy01Icon,
+  Delete01Icon,
+  UploadSquare01Icon,
+} from "@hugeicons/core-free-icons";
 import { TagCell } from "@/components/dashboard/table/TagCell";
 import { EditableTextCell } from "@/components/dashboard/table/EditableTextCell";
 import type { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { toast, useSonner } from "sonner";
 
 export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
   {
@@ -52,6 +58,46 @@ export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
             updateMutation.mutate({ id: spawnId, data: { sideId: newSide } });
           }}
         />
+      );
+    },
+  },
+  {
+    id: "position",
+    header: "Position",
+    cell: ({ row }) => {
+      const { x, y, z } = row.original;
+      const posString = `setpos ${x} ${y} ${z}`;
+
+      const handleCopy = async () => {
+        try {
+          await navigator.clipboard.writeText(posString);
+          toast.success("Coordinates copied", {
+            description: "Ready to paste into console.",
+          });
+        } catch (err) {
+          console.error("Failed to copy!", err);
+        }
+      };
+
+      return (
+        <div className="flex items-center gap-1">
+          <Badge className="font-mono text-xs rounded-sm bg-transparent text-white">
+            {`${x.toFixed(2)} / ${y.toFixed(2)} / ${z.toFixed(2)}`}
+          </Badge>
+
+          <Button
+            variant="ghost"
+            size="xs"
+            className="h-8 w-8 p-0"
+            onClick={handleCopy}
+          >
+            <HugeiconsIcon icon={Copy01Icon} size={16} />
+          </Button>
+
+          <Button variant="ghost" size="xs" className="h-8 w-8 p-0">
+            <HugeiconsIcon icon={UploadSquare01Icon} size={16} />
+          </Button>
+        </div>
       );
     },
   },
