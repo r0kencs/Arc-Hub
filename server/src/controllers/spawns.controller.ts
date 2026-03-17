@@ -1,68 +1,93 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 
-// Create a new spawn
-export const createSpawn = async (req: Request, res: Response) => {
-  try {
-    const { name, mapId, sideId, x, y, z, pitch, yaw } = req.body;
+interface SpawnParams {
+  id: string;
+}
+interface CreateSpawnBody {
+  name: string;
+  mapId: string;
+  sideId: string;
+  x: number;
+  y: number;
+  z: number;
+}
 
-    // We use 'connect' to link to existing Map and Side records
+export const createSpawn = async (
+  req: Request<{}, {}, CreateSpawnBody>,
+  res: Response,
+) => {
+  try {
     const newSpawn = await prisma.spawn.create({
-      data: {
-        name,
-        x,
-        y,
-        z,
-        pitch,
-        yaw,
-        map: { connect: { id: mapId } },
-        side: { connect: { id: sideId } },
-      },
-      include: { map: true, side: true }, // Optional: returns the related objects in the response
+      data: req.body,
+      include: { map: true, side: true },
     });
 
     res.status(201).json(newSpawn);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Failed to create spawn. Check if mapId/sideId are valid.",
-    });
+    res.status(400).json({ error: "Spawn already exists or invalid data" });
   }
 };
 
-// Update an existing spawn
-export const updateSpawn = async (req: Request, res: Response) => {
+export const getSpawn = async (req: Request<SpawnParams>, res: Response) => {
   try {
-    const { id } = req.params as { id: string }; // id is a String (cuid)
-    const { name, mapId, sideId, x, y, z, pitch, yaw } = req.body;
-
-    const updatedSpawn = await prisma.spawn.update({
-      where: { id },
-      data: {
-        name,
-        x,
-        y,
-        z,
-        pitch,
-        yaw,
-        // Only update relations if they are provided in the request
-        ...(mapId && { map: { connect: { id: mapId } } }),
-        ...(sideId && { side: { connect: { id: sideId } } }),
-      },
+    const spawn = await prisma.spawn.findUnique({
+      where: { id: req.params.id },
+      include: { map: true, side: true },
     });
 
-    res.status(200).json(updatedSpawn);
+    if (!spawn) {
+      return res.status(404).json({ error: "Spawn not found" });
+    }
+
+    res.status(200).json(spawn);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Update failed. Spawn ID may not exist." });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const getAllSpawns = async (req: Request, res: Response) => {
   try {
-    const spawns = await prisma.spawn.findMany();
+    const { mapId, sideId } = req.query;
+
+    const spawns = await prisma.spawn.findMany({
+      where: {
+        mapId: mapId as string,
+        sideId: sideId as string,
+      },
+      include: { map: true, side: true },
+    });
     res.status(200).json(spawns);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const updateSpawn = async (
+  req: Request<SpawnParams, {}, Partial<CreateSpawnBody>>,
+  res: Response,
+) => {
+  try {
+    const updatedSpawn = await prisma.spawn.update({
+      where: { id: req.params.id },
+      data: req.body,
+      include: { map: true, side: true },
+    });
+
+    res.status(200).json(updatedSpawn);
+  } catch (error) {
+    res.status(404).json({ error: "Spawn not found or update failed" });
+  }
+};
+
+export const deleteSpawn = async (req: Request<SpawnParams>, res: Response) => {
+  try {
+    await prisma.spawn.delete({
+      where: { id: req.params.id },
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(404).json({ error: "Spawn not found or deletion failed" });
   }
 };

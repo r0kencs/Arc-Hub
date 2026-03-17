@@ -42,8 +42,11 @@ model Side {
   lineups Lineup[] @relation("LineupSides")
   spawns  Spawn[]
 }
+
 model Lineup {
   id            String            @id @default(cuid())
+
+  name          String
 
   map           Map               @relation(fields: [mapId], references: [id])
   mapId         String
@@ -81,8 +84,6 @@ model Spawn {
   x     Float
   y     Float
   z     Float
-  pitch Float
-  yaw   Float
 
   @@unique([mapId, name]) // Prevents duplicate naming on the same map
 
