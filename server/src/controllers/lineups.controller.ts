@@ -98,9 +98,10 @@ export const getAllLineups = async (req: Request, res: Response) => {
         }),
       },
       include: {
+        map: true,
+        type: true,
         sides: true,
         techniques: true,
-        type: true,
       },
     });
 
