@@ -54,16 +54,17 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       {/* Table Container */}
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-hidden">
         <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
                       style={{ width: `${header.getSize()}px` }}
+                      className="text-center"
                     >
                       {header.isPlaceholder
                         ? null
