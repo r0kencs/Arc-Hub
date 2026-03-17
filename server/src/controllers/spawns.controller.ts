@@ -82,7 +82,7 @@ export const updateSpawn = async (
 
 export const deleteSpawn = async (req: Request<SpawnParams>, res: Response) => {
   try {
-    await prisma.map.delete({
+    await prisma.spawn.delete({
       where: { id: req.params.id },
     });
 
