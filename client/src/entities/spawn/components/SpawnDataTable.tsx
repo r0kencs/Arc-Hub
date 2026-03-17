@@ -13,6 +13,30 @@ import { EditableTextCell } from "@/components/dashboard/table/EditableTextCell"
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { toast, useSonner } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const columns = (updateMutation: any): ColumnDef<Spawn>[] => [
   {
@@ -162,5 +186,52 @@ export function SpawnDataTable() {
   if (isError) return <p>Error: {(error as Error).message}</p>;
 
   // Pass the mutation to the columns function
-  return <DataTable columns={columns(mutation)} data={data as Spawn[]} />;
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <Popover>
+        <PopoverTrigger className="">
+          <Button variant="outline">Create</Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a map" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Maps</SelectLabel>
+                    <SelectItem value="de_mirage">Mirage</SelectItem>
+                    <SelectItem value="de_ancient">Ancient</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a side" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sides</SelectLabel>
+                    <SelectItem value="CT">CT</SelectItem>
+                    <SelectItem value="T">T</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <div className="grid grid-cols-3 items-center gap-4">
+                <Label htmlFor="maxHeight">Set Pos</Label>
+                <Input
+                  id="maxHeight"
+                  defaultValue="none"
+                  className="col-span-2 h-8"
+                />
+              </div>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+      <DataTable columns={columns(mutation)} data={data as Spawn[]} />
+    </div>
+  );
 }
