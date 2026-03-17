@@ -22,12 +22,13 @@ import { toast } from "sonner";
 import { SpawnPopoverCreate } from "./SpawnPopoverCreate";
 import { SideSelect } from "@/entities/side/components/SideSelect";
 import { MapSelect } from "@/entities/map/components/MapSelect";
-import type { Map } from "@/entities/map/map";
+import { getMaps, type Map } from "@/entities/map/map";
 
 // Column Definitions
 export const columns = (
   updateMutation: any,
   deleteMutation: any,
+  maps: Map[],
 ): ColumnDef<Spawn>[] => [
   {
     accessorKey: "id",
@@ -60,6 +61,7 @@ export const columns = (
       return (
         <MapSelect
           value={map}
+          maps={maps}
           onChange={(newMap) => {
             updateMutation.mutate({ id: spawnId, data: { mapId: newMap.id } });
           }}
@@ -143,12 +145,16 @@ export const columns = (
 export function SpawnDataTable() {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data: spawns, isLoading: loadingSpawns } = useQuery({
     queryKey: ["spawns"],
     queryFn: getSpawns,
   });
 
-  console.log(data);
+  // Fetch Maps from DB
+  const { data: maps = [], isLoading: loadingMaps } = useQuery({
+    queryKey: ["maps"],
+    queryFn: getMaps,
+  });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Spawn> }) =>
@@ -187,8 +193,7 @@ export function SpawnDataTable() {
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error: {(error as Error).message}</p>;
+  if (loadingSpawns || loadingMaps) return <p>Loading...</p>;
 
   return (
     <div className="flex flex-col items-center gap-4 w-full">
@@ -199,8 +204,8 @@ export function SpawnDataTable() {
         />
       </div>
       <DataTable
-        columns={columns(updateMutation, deleteMutation)}
-        data={data as Spawn[]}
+        columns={columns(updateMutation, deleteMutation, maps)}
+        data={spawns as Spawn[]}
       />
     </div>
   );
